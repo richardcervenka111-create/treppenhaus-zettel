@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Treppenhaus-Zettel</title>
+<meta name="description" content="Zettel fürs Treppenhaus: Ich kann helfen mit … / Ich brauche Hilfe bei …. Ausfüllen, drucken, aufhängen. Nichts wird gesendet.">
+<style>
+:root{--bg:#f4efe6;--ink:#1f1a14;--mut:#6b6157;--acc:#c8541f;--card:#fff}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 -apple-system,system-ui,sans-serif}
+main{max-width:720px;margin:0 auto;padding:16px 16px 40px}
+h1{font-size:24px;margin:8px 0 2px}.sub{color:var(--mut);font-size:14px;margin-bottom:14px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}@media(max-width:560px){.row{grid-template-columns:1fr}}
+label{display:block;font-size:13px;color:var(--mut);margin:10px 0 4px}
+input,textarea,select{width:100%;font-size:17px;padding:10px;border:1px solid #d8cfc2;border-radius:10px;background:#fff;color:var(--ink)}
+textarea{min-height:70px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.chips button{background:#fff;border:1px solid #d8cfc2;border-radius:999px;padding:6px 10px;font-size:14px;cursor:pointer}
+.chips button[aria-pressed="true"]{background:var(--acc);color:#fff;border-color:var(--acc)}
+.lang{display:flex;gap:6px;flex-wrap:wrap}.lang button{min-height:36px}
+button.big{background:var(--acc);color:#fff;border:0;border-radius:12px;padding:14px;font-size:17px;font-weight:700;width:100%;margin-top:16px;cursor:pointer}
+.note{font-size:13px;color:var(--mut);margin-top:10px}
+/* plagát */
+#poster{background:#fff;color:#111;margin:20px auto 0;width:100%;max-width:640px;aspect-ratio:210/297;padding:8%;border:1px solid #d8cfc2;display:flex;flex-direction:column;font-family:Georgia,serif}
+#poster h2{font-size:6.2cqw;margin:0 0 2%;font-weight:700;line-height:1.15}
+#poster .hi{color:var(--acc)}
+#poster .sec{margin-top:5%}
+#poster .sec h3{font-size:3.6cqw;margin:0 0 1%;font-family:-apple-system,system-ui,sans-serif;color:#444;letter-spacing:.04em;text-transform:uppercase}
+#poster .sec p{font-size:4.2cqw;margin:0;line-height:1.35}
+#poster .who{margin-top:auto;border-top:2px solid #111;padding-top:3%;font-size:3.8cqw;font-family:-apple-system,system-ui,sans-serif}
+#poster .who b{font-size:4.6cqw}
+#poster .tear{margin-top:3%;display:grid;grid-template-columns:repeat(6,1fr);gap:2px}
+#poster .tear span{border-left:1px dashed #999;writing-mode:vertical-rl;transform:rotate(180deg);font-size:2.6cqw;padding:6px 2px;text-align:center;font-family:-apple-system,system-ui,sans-serif;height:18cqw}
+#poster .foot{font-size:2.4cqw;color:#777;margin-top:2%;font-family:-apple-system,system-ui,sans-serif}
+@media print{body{background:#fff}main>*:not(#poster){display:none}#poster{border:0;max-width:none;width:100%;height:100vh;aspect-ratio:auto;padding:14mm}@page{size:A4;margin:0}}
+</style>
+</head>
+<body>
+<main>
+<h1>Treppenhaus-Zettel</h1>
+<div class="sub">Ein Blatt für dein Haus: was du anbieten kannst, wobei du Hilfe brauchst. Ausfüllen, drucken, im Treppenhaus aufhängen. Nichts verlässt dein Gerät.</div>
+
+<label>Sprache des Zettels</label>
+<div class="lang chips" id="lang"></div>
+
+<div class="row">
+  <div><label>Dein Vorname (oder „Familie Müller“)</label><input id="name" placeholder="Anna"></div>
+  <div><label>Stockwerk / Tür</label><input id="floor" placeholder="3. Stock links"></div>
+</div>
+<div class="row">
+  <div><label>Wie erreichbar (Telefon, Klingel, Zettel in Briefkasten)</label><input id="contact" placeholder="Klingeln oder 079 …"></div>
+  <div><label>Wann am ehesten</label><input id="when" placeholder="Abends ab 18 Uhr, Wochenende"></div>
+</div>
+
+<label>Ich kann helfen mit</label>
+<div class="chips" id="offer"></div>
+<textarea id="offerText" placeholder="Eigene Worte …"></textarea>
+
+<label>Ich bräuchte Hilfe bei</label>
+<div class="chips" id="need"></div>
+<textarea id="needText" placeholder="Eigene Worte …"></textarea>
+
+<label>Abreiss-Streifen mit Kontakt (unten am Zettel)</label>
+<select id="tear"><option value="1">ja, 6 Streifen</option><option value="0">nein</option></select>
+
+<button class="big" id="print">Drucken (A4)</button>
+<div class="note">Tipp: im Druckdialog „Hintergrundgrafiken“ einschalten, Ränder „keine“. Aufhängen nur, wo es die Hausordnung erlaubt; im Zweifel die Verwaltung fragen. Für organisierte Hilfe in Bern gibt es <a href="https://www.nachbarschaft-bern.ch/">Nachbarschaft Bern</a>.</div>
+
+<div id="poster" aria-label="Vorschau"></div>
+</main>
+<script>
+(function(){
+const L={
+ de:{n:"Deutsch",title:"Hallo Nachbarinnen und Nachbarn",offerH:"Ich kann helfen mit",needH:"Ich bräuchte Hilfe bei",who:"Meldet euch einfach",reach:"Erreichbar",when:"Am ehesten",foot:"Zettel von treppenhaus-zettel · gratis, ohne Daten, für jedes Haus",
+   offers:["Einkaufen","Paket annehmen","Pflanzen giessen","Katze/Hund füttern","Kinder hüten (kurz)","Deutsch üben","Computer/Handy","Werkzeug ausleihen","Kochen für zwei","Mitfahren","Zuhören bei Kaffee","Schnee schaufeln"],
+   needs:["Schwere Sachen tragen","Einkauf bei Krankheit","Fahrt zum Arzt","Formulare verstehen","Handy einrichten","Bohren / Reparieren","Kinderbetreuung (Notfall)","Pflanzen giessen (Ferien)","Jemand zum Reden","Begleitung Spaziergang"]},
+ fr:{n:"Français",title:"Bonjour chers voisins",offerH:"Je peux aider pour",needH:"J’aurais besoin d’aide pour",who:"N’hésitez pas",reach:"Joignable",when:"De préférence",foot:"Affiche de treppenhaus-zettel · gratuit, sans données, pour chaque immeuble",
+   offers:["Faire les courses","Réceptionner un colis","Arroser les plantes","Nourrir chat/chien","Garder les enfants (court)","Pratiquer le français/allemand","Ordinateur/téléphone","Prêter des outils","Cuisiner pour deux","Covoiturage","Écouter autour d’un café","Déneiger"],
+   needs:["Porter des charges lourdes","Courses en cas de maladie","Trajet chez le médecin","Comprendre des formulaires","Configurer le téléphone","Percer / réparer","Garde d’enfants (urgence)","Arroser (vacances)","Quelqu’un à qui parler","Accompagner une promenade"]},
+ en:{n:"English",title:"Hello neighbours",offerH:"I can help with",needH:"I could use help with",who:"Just get in touch",reach:"Reach me",when:"Best time",foot:"Poster by treppenhaus-zettel · free, no data, for every house",
+   offers:["Shopping","Receiving parcels","Watering plants","Feeding cat/dog","Short childcare","Practising German","Computer/phone","Lending tools","Cooking for two","Giving a lift","Listening over coffee","Shovelling snow"],
+   needs:["Carrying heavy things","Shopping when ill","Ride to the doctor","Understanding forms","Setting up a phone","Drilling / repairs","Childcare (emergency)","Watering (holidays)","Someone to talk to","Company on a walk"]},
+ uk:{n:"Українська",title:"Вітаю, сусіди",offerH:"Можу допомогти з",needH:"Потребую допомоги з",who:"Звертайтеся",reach:"Зв’язок",when:"Найкраще",foot:"Оголошення з treppenhaus-zettel · безкоштовно, без даних, для кожного будинку",
+   offers:["Покупки","Прийняти посилку","Полити рослини","Нагодувати кота/собаку","Посидіти з дітьми (коротко)","Практика німецької","Комп’ютер/телефон","Позичити інструмент","Приготувати на двох","Підвезти","Вислухати за кавою","Прибрати сніг"],
+   needs:["Перенести важке","Покупки під час хвороби","Поїздка до лікаря","Зрозуміти формуляри","Налаштувати телефон","Свердлити / ремонт","Догляд за дітьми (терміново)","Полити (відпустка)","Поговорити","Супровід на прогулянці"]},
+ sk:{n:"Slovensky",title:"Ahojte, susedia",offerH:"Môžem pomôcť s",needH:"Potreboval/a by som pomoc s",who:"Ozvite sa",reach:"Kontakt",when:"Najlepšie",foot:"Lístok z treppenhaus-zettel · zadarmo, bez dát, pre každý dom",
+   offers:["Nákup","Prevziať balík","Poliať rastliny","Nakŕmiť mačku/psa","Postrážiť deti (krátko)","Precvičiť nemčinu","Počítač/mobil","Požičať náradie","Uvariť pre dvoch","Odviezť","Vypočuť pri káve","Odhrnúť sneh"],
+   needs:["Odniesť ťažké veci","Nákup pri chorobe","Odvoz k lekárovi","Porozumieť formulárom","Nastaviť mobil","Vŕtať / opraviť","Stráženie detí (núdza)","Polievanie (dovolenka)","Niekoho na rozhovor","Sprievod na prechádzku"]}
+};
+let lang="de"; const sel={offer:new Set(),need:new Set()};
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function chips(id,list,set){ const el=$(id); el.innerHTML=""; list.forEach(x=>{ const b=document.createElement("button"); b.type="button"; b.textContent=x; b.setAttribute("aria-pressed",set.has(x)?"true":"false"); b.onclick=()=>{ set.has(x)?set.delete(x):set.add(x); b.setAttribute("aria-pressed",set.has(x)?"true":"false"); render(); }; el.appendChild(b); }); }
+function langChips(){ const el=$("lang"); el.innerHTML=""; Object.keys(L).forEach(k=>{ const b=document.createElement("button"); b.type="button"; b.textContent=L[k].n; b.setAttribute("aria-pressed",k===lang?"true":"false"); b.onclick=()=>{ lang=k; sel.offer.clear(); sel.need.clear(); langChips(); chips("offer",L[lang].offers,sel.offer); chips("need",L[lang].needs,sel.need); render(); }; el.appendChild(b); }); }
+function render(){ const T=L[lang]; const name=$("name").value.trim(), floor=$("floor").value.trim(), contact=$("contact").value.trim(), when=$("when").value.trim();
+  const offers=[...sel.offer].concat($("offerText").value.trim()?[$("offerText").value.trim()]:[]); const needs=[...sel.need].concat($("needText").value.trim()?[$("needText").value.trim()]:[]);
+  const tear=$("tear").value==="1"; const tag=[name,floor].filter(Boolean).join(", ")+(contact?" · "+contact:"");
+  $("poster").innerHTML=`<h2>${esc(T.title)}<br><span class="hi">${esc(name||"…")}${floor?", "+esc(floor):""}</span></h2>
+  ${offers.length?`<div class="sec"><h3>${esc(T.offerH)}</h3><p>${offers.map(esc).join(" · ")}</p></div>`:""}
+  ${needs.length?`<div class="sec"><h3>${esc(T.needH)}</h3><p>${needs.map(esc).join(" · ")}</p></div>`:""}
+  <div class="who"><b>${esc(T.who)}</b>${contact?`<br>${esc(T.reach)}: ${esc(contact)}`:""}${when?`<br>${esc(T.when)}: ${esc(when)}`:""}</div>
+  ${tear?`<div class="tear">${Array(6).fill(0).map(()=>`<span>${esc(tag||"…")}</span>`).join("")}</div>`:""}
+  <div class="foot">${esc(T.foot)}</div>`; }
+["name","floor","contact","when","offerText","needText","tear"].forEach(id=>$(id).addEventListener("input",render));
+$("tear").addEventListener("change",render);
+$("print").addEventListener("click",()=>window.print());
+langChips(); chips("offer",L.de.offers,sel.offer); chips("need",L.de.needs,sel.need); render();
+})();
+</script>
+</body>
+</html>
