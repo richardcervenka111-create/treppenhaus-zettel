@@ -1,6 +1,6 @@
 # Treppenhaus-Zettel
 
-Ein Blatt für dein Haus: „Ich kann helfen mit …“ und „Ich bräuchte Hilfe bei …“. Ausfüllen, drucken, im Treppenhaus aufhängen. Fünf Sprachen (DE/FR/EN/UK/SK), Abreiss-Streifen mit Kontakt, nichts verlässt das Gerät.
+Ein Blatt für dein Haus: „Ich kann helfen mit …“ und „Ich bräuchte Hilfe bei …“. Ausfüllen, drucken, im Treppenhaus aufhängen. Vier Sprachen (DE/FR/EN/UK), Abreiss-Streifen mit Kontakt, nichts verlässt das Gerät.
 
 Live: **https://richardcervenka111-create.github.io/treppenhaus-zettel/**
 
