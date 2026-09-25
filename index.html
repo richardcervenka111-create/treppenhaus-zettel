@@ -33,7 +33,10 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manip
 ::selection{background:var(--acc);color:var(--acc-ink)}
 
 /* header */
-.k-top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-block:8px 4px}
+.k-top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-block:8px 6px}
+.k-top.sticky{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;background:var(--bg);margin-inline:-16px;padding-inline:16px;transition:box-shadow .2s var(--ease)}
+.k-top.sticky.scrolled{box-shadow:0 1px 0 var(--line),0 8px 24px rgba(0,0,0,.06)}
+@media print{.k-top.sticky{position:static;box-shadow:none}}
 .k-brand{display:flex;align-items:center;gap:12px;min-width:0}
 .k-brand .k-logo{flex:none;width:44px;height:44px;border-radius:12px;box-shadow:var(--shadow-sm)}
 .k-brand h1{font-size:clamp(22px,4.6vw,28px);font-weight:800}
@@ -43,6 +46,7 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manip
 .k-seg button:hover{color:var(--ink)}
 .k-seg button:active{transform:scale(.94)}
 .k-seg button[aria-pressed="true"],.k-seg button[aria-selected="true"]{background:var(--surface);color:var(--ink);box-shadow:var(--shadow-sm)}
+.k-seg button:focus-visible{outline-offset:1px}
 
 /* buttons */
 .k-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);border-radius:var(--r);padding:10px 16px;font-weight:700;font-size:16px;min-height:var(--tap);text-decoration:none;transition:transform .14s var(--spring),background .18s var(--ease),border-color .18s,box-shadow .18s,color .18s;will-change:transform}
@@ -168,7 +172,7 @@ button.big:hover{filter:brightness(1.06)}button.big:active{transform:scale(.97)}
 <body>
 <div class="k-splash" aria-hidden="true"><svg class="" width="88" height="88" viewBox="0 0 48 48" role="img" aria-label="Treppenhaus-Zettel Logo"><defs><linearGradient id="kgtreppenhauszettel" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c8541f"/><stop offset="1" stop-color="#883915"/></linearGradient></defs><rect width="48" height="48" rx="13" fill="url(#kgtreppenhauszettel)"/><g class="g" transform="translate(6 6) scale(1.5)" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4v-4h4v-4h4v-4h4"/><circle cx="19" cy="5" r="1.6" fill="#fff" stroke="none"/></g></svg><b>Treppenhaus-Zettel</b></div>
 <main>
-<header class="k-top"><div class="k-brand"><svg class="k-logo" width="44" height="44" viewBox="0 0 48 48" role="img" aria-label="Treppenhaus-Zettel Logo"><defs><linearGradient id="kgtreppenhauszettel" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c8541f"/><stop offset="1" stop-color="#883915"/></linearGradient></defs><rect width="48" height="48" rx="13" fill="url(#kgtreppenhauszettel)"/><g class="" transform="translate(6 6) scale(1.5)" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4v-4h4v-4h4v-4h4"/><circle cx="19" cy="5" r="1.6" fill="#fff" stroke="none"/></g></svg><div><h1>Treppenhaus-Zettel</h1><small>Ein Blatt für dein Haus: was du anbieten kannst, wobei du Hilfe brauchst. Ausfüllen, drucken, aufhängen. Nichts verlässt dein Gerät.</small></div></div></header>
+<header class="k-top sticky"><div class="k-brand"><svg class="k-logo" width="44" height="44" viewBox="0 0 48 48" role="img" aria-label="Treppenhaus-Zettel Logo"><defs><linearGradient id="kgtreppenhauszettel" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c8541f"/><stop offset="1" stop-color="#883915"/></linearGradient></defs><rect width="48" height="48" rx="13" fill="url(#kgtreppenhauszettel)"/><g class="" transform="translate(6 6) scale(1.5)" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4v-4h4v-4h4v-4h4"/><circle cx="19" cy="5" r="1.6" fill="#fff" stroke="none"/></g></svg><div><h1>Treppenhaus-Zettel</h1><small>Ein Blatt für dein Haus: was du anbieten kannst, wobei du Hilfe brauchst. Ausfüllen, drucken, aufhängen. Nichts verlässt dein Gerät.</small></div></div></header>
 
 <label>Sprache des Zettels</label>
 <div class="lang chips" id="lang"></div>
@@ -226,6 +230,10 @@ var tt,ttT; K.toast=function(m){ if(!tt){ tt=document.createElement('div'); tt.c
 K.stagger=function(root,max){ if(!root||reduced) return; var kids=root.children,n=Math.min(kids.length,max||14); for(var i=0;i<n;i++){ kids[i].style.setProperty('--i',i); kids[i].classList.add('k-in'); } };
 /* delegated haptics on primary buttons */
 document.addEventListener('pointerdown',function(e){ var b=e.target.closest&&e.target.closest('.k-btn.primary,.k-chip,.k-seg button'); if(b) K.tick(6); },{passive:true});
+/* language persistence for the kit switcher (.lang button[data-l]) */
+(function(){ var KEY='k-lang'; document.addEventListener('click',function(e){ var b=e.target.closest&&e.target.closest('.lang button[data-l]'); if(b){ try{ localStorage.setItem(KEY,b.dataset.l); }catch(x){} } },true);
+  function restore(){ var v=null; try{ v=localStorage.getItem(KEY); }catch(x){} if(!v) return; var b=document.querySelector('.lang button[data-l="'+v+'"]'); if(b&&b.getAttribute('aria-pressed')!=='true') b.click(); }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',restore); else restore(); })();
 /* sticky header shadow */
 var top=document.querySelector('.k-top.sticky'); if(top){ var on=false; window.addEventListener('scroll',function(){ var s=window.scrollY>8; if(s!==on){ on=s; top.classList.toggle('scrolled',s); } },{passive:true}); }
 })();
@@ -253,7 +261,7 @@ let lang="de"; const sel={offer:new Set(),need:new Set()};
 const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 function chips(id,list,set){ const el=$(id); el.innerHTML=""; list.forEach(x=>{ const b=document.createElement("button"); b.type="button"; b.textContent=x; b.setAttribute("aria-pressed",set.has(x)?"true":"false"); b.onclick=()=>{ set.has(x)?set.delete(x):set.add(x); b.setAttribute("aria-pressed",set.has(x)?"true":"false"); render(); }; el.appendChild(b); }); }
-function langChips(){ const el=$("lang"); el.innerHTML=""; Object.keys(L).filter(k=>k!=="sk").forEach(k=>{ const b=document.createElement("button"); b.type="button"; b.textContent=L[k].n; b.setAttribute("aria-pressed",k===lang?"true":"false"); b.onclick=()=>{ lang=k; sel.offer.clear(); sel.need.clear(); langChips(); chips("offer",L[lang].offers,sel.offer); chips("need",L[lang].needs,sel.need); render(); }; el.appendChild(b); }); }
+function langChips(){ const el=$("lang"); el.innerHTML=""; Object.keys(L).filter(k=>k!=="sk").forEach(k=>{ const b=document.createElement("button"); b.type="button"; b.dataset.l=k; b.lang=k; b.textContent=L[k].n; b.setAttribute("aria-pressed",k===lang?"true":"false"); b.onclick=()=>{ lang=k; sel.offer.clear(); sel.need.clear(); langChips(); chips("offer",L[lang].offers,sel.offer); chips("need",L[lang].needs,sel.need); render(); }; el.appendChild(b); }); }
 function render(){ const T=L[lang]; const name=$("name").value.trim(), floor=$("floor").value.trim(), contact=$("contact").value.trim(), when=$("when").value.trim();
   const offers=[...sel.offer].concat($("offerText").value.trim()?[$("offerText").value.trim()]:[]); const needs=[...sel.need].concat($("needText").value.trim()?[$("needText").value.trim()]:[]);
   const tear=$("tear").value==="1"; const tag=[name,floor].filter(Boolean).join(", ")+(contact?" · "+contact:"");
